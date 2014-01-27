@@ -1,0 +1,13 @@
+{
+    "name": "renext",
+    "description": "Rename Extended",
+    "copyright": "Copyright (C) 2014 - Marc Noirot",
+    "homepage": "https://github.com/noirotm/renext",
+    "authors": ["Marc Noirot"],
+    "license": "GPLv3",
+    "sourcePaths": ["."],
+    "importPaths": ["."],
+    "targetType": "executable",
+    "mainSourceFile": "renext.d",
+    "dependencies": {}
+}
