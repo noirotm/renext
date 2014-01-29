@@ -88,30 +88,30 @@ class Renamer {
 
     private static string capstr(string s)
     out (result) {
-		assert(s.length == result.length, format("length should be %d, got %d ", s.length, result.length));
-	}
+        assert(s.length == result.length, format("length should be %d, got %d ", s.length, result.length));
+    }
     body {
         bool isBoundary = true;
-		char[] result;
+        char[] result;
         foreach (c; s) {
             if (std.ascii.isWhite(c)) {
                 isBoundary = true;
-				result ~= c;
-			}
+                result ~= c;
+            }
             else if (isBoundary) {
                 isBoundary = false;
                 result ~= std.ascii.toUpper(c);
             }
             else {
-            	result ~= std.ascii.toLower(c);
+                result ~= std.ascii.toLower(c);
             }
         }
-		return result.idup;
+        return result.idup;
     }
     
     unittest {
-    	assert(capstr("abc") == "Abc");
-    	assert(capstr("ABC") == "Abc");
-    	assert(capstr("abc def") == "Abc Def");
+        assert(capstr("abc") == "Abc");
+        assert(capstr("ABC") == "Abc");
+        assert(capstr("abc def") == "Abc Def");
     }
 }

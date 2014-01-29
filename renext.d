@@ -44,26 +44,26 @@ int main(string[] args) {
     
     // parse command line
     try {
-	    getopt(args,
-	    	std.getopt.config.caseSensitive,
-	    	std.getopt.config.bundling,
-	    	"capitalize|c",		&renamer.capitalize,
-	    	"rename-all|a", 	{ renamer.renameDirs = true; renamer.renameFiles = true; },
-	    	"rename-dirs|d", 	{ renamer.renameDirs = true; renamer.renameFiles = false; },
-	    	"global|g", 		&renamer.global,
-	    	"ignore-case|i", 	&renamer.ignoreCase,
-	    	"recursive|r",		&renamer.recursive,
-	    	"test|t",			&renamer.test,
-	    	"verbose+|v+",		&renamer.verbosity,
-	    	"quiet|q",			{ renamer.verbosity = 0; },
-	    	"version|V",		{ printVersion(); exit(1); },
-	    	"help|h",			{ usage(); exit(1); }
-	    );
+        getopt(args,
+            std.getopt.config.caseSensitive,
+            std.getopt.config.bundling,
+            "capitalize|c",     &renamer.capitalize,
+            "rename-all|a",     { renamer.renameDirs = true; renamer.renameFiles = true; },
+            "rename-dirs|d",    { renamer.renameDirs = true; renamer.renameFiles = false; },
+            "global|g",         &renamer.global,
+            "ignore-case|i",    &renamer.ignoreCase,
+            "recursive|r",      &renamer.recursive,
+            "test|t",           &renamer.test,
+            "verbose+|v+",      &renamer.verbosity,
+            "quiet|q",          { renamer.verbosity = 0; },
+            "version|V",        { printVersion(); exit(1); },
+            "help|h",           { usage(); exit(1); }
+        );
     }
     catch (Exception e) {
-    	stderr.writefln(e.msg);
-    	usage();
-    	return 1;
+        stderr.writefln(e.msg);
+        usage();
+        return 1;
     }
 
     if (args.length < 2) {
