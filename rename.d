@@ -40,32 +40,31 @@ class Renamer {
 
         auto re = regex(findRe, attrib);
 
-        auto entries = dirEntries(dir, SpanMode.shallow);
-        foreach (string e; entries) {
-            bool isDir = (isDir(std.path.buildPath(dir, e)) != 0);
-            if (isDir)
-                directories ~= e;
+        foreach (DirEntry e; dirEntries(dir, SpanMode.shallow)) {
+            string filename = baseName(e.name); 
+            if (e.isDir)
+                directories ~= filename;
 
-            if (((renameDirs && isDir) || (renameFiles && !isDir)) && match(e, re)) {
+            if (((renameDirs && e.isDir) || (renameFiles && !e.isDir)) && match(filename, re)) {
                 if (replacements.length == 0 && verbosity == 1)
                     writefln("\n  %s", dir);
 
-                auto repl = replace(e, re, replaceRe);
+                auto repl = replace(filename, re, replaceRe);
                 replacements[e] = repl;
                 if (capitalize)
                     repl = capstr(repl);
 
                 if (verbosity > 0) {
-                    writefln("rename: %s ==> %s", e, repl);
+                    writefln("rename: %s ==> %s", filename, repl);
                 }
 
                 if (namesCallback != null) {
-                    namesCallback(e, repl);
+                    namesCallback(filename, repl);
                 }
             }
             else {
                 if (verbosity > 1)
-                    writefln("skip: %s", e);
+                    writefln("skip: %s", filename);
             }
         }
 
@@ -79,7 +78,7 @@ class Renamer {
 
         if (!test) {
             foreach (e, repl; replacements) {
-                std.file.rename(std.path.buildPath(dir, e), std.path.buildPath(dir, repl));
+                std.file.rename(e, std.path.buildPath(dir, repl));
                 ++renamed;
             }
         }
@@ -87,7 +86,11 @@ class Renamer {
         return renamed;
     }
 
-    private string capstr(string s) {
+    private static string capstr(string s)
+    out (result) {
+		assert(s.length == result.length, format("length should be %d, got %d ", s.length, result.length));
+	}
+    body {
         bool isBoundary = true;
 		char[] result;
         foreach (c; s) {
@@ -99,7 +102,16 @@ class Renamer {
                 isBoundary = false;
                 result ~= std.ascii.toUpper(c);
             }
+            else {
+            	result ~= std.ascii.toLower(c);
+            }
         }
 		return result.idup;
+    }
+    
+    unittest {
+    	assert(capstr("abc") == "Abc");
+    	assert(capstr("ABC") == "Abc");
+    	assert(capstr("abc def") == "Abc Def");
     }
 }
